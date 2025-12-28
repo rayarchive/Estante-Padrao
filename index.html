@@ -5,105 +5,81 @@
     <style>
         /* --- ESTILO GERAL --- */
         body {
-            margin: 0;
-            padding: 0;
-            /* Isso garante que no Notion fique transparente. 
-               No CodePen parece branco porque o fundo do site é branco. */
+            margin: 0; padding: 0;
             background-color: transparent; 
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             color: white;
         }
 
-        /* O MÓVEL (Container Principal) */
+        /* O MÓVEL */
         .furniture-wrapper {
-            width: 90%;
-            max-width: 420px;
+            width: 90%; max-width: 420px;
             margin: 20px auto;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
+            display: flex; flex-direction: column; align-items: center;
         }
 
         /* A PARTE DE CIMA (ESTANTE) */
         .bookshelf-container {
             width: 100%;
-            background-color: #0d0d0d; /* Preto profundo */
-            border: 15px solid #1a1a1a; /* Moldura */
+            background-color: #0d0d0d; 
+            border: 15px solid #1a1a1a; 
             border-bottom: none;
             border-radius: 6px 6px 0 0; 
             box-shadow: 10px 10px 30px rgba(0,0,0,0.6);
-            display: flex;
-            flex-direction: column;
+            display: flex; flex-direction: column;
             position: relative;
         }
 
-        /* Topo decorativo */
         .bookshelf-container::before {
-            content: '';
-            position: absolute;
-            top: -25px; left: -15px; right: -15px;
-            height: 25px;
-            background: #1a1a1a;
-            border-radius: 4px 4px 0 0;
+            content: ''; position: absolute;
+            top: -25px; left: -15px; right: -15px; height: 25px;
+            background: #1a1a1a; border-radius: 4px 4px 0 0;
             box-shadow: 0 2px 5px rgba(0,0,0,0.5);
         }
 
         /* AS PRATELEIRAS */
         .shelf-row {
-            height: 130px; 
+            height: 130px; /* Altura fixa em Pixels */
             border-bottom: 12px solid #252525;
-            display: flex;
-            align-items: flex-end; 
+            display: flex; align-items: flex-end; /* Alinha livros na base */
             padding: 0 8px;
-            /* Degradê nas prateleiras */
             background: linear-gradient(to bottom, #050505, #161616); 
             position: relative;
             overflow: hidden; 
         }
 
         .shelf-row::before {
-            content: '';
-            position: absolute;
+            content: ''; position: absolute;
             top: 0; left: 0; right: 0; height: 10px;
-            background: rgba(0,0,0,0.4);
-            z-index: 1;
+            background: rgba(0,0,0,0.4); z-index: 1;
         }
 
         /* A BASE COM OS PÉS */
         .shelf-footer {
-            width: 100%;
-            display: flex;
-            justify-content: space-between;
-            padding: 0 5px;
-            box-sizing: border-box;
+            width: 100%; display: flex; justify-content: space-between;
+            padding: 0 5px; box-sizing: border-box;
         }
 
         .foot {
-            width: 50px;
-            height: 30px;
-            background: #1a1a1a;
+            width: 50px; height: 30px; background: #1a1a1a;
             border-radius: 0 0 5px 5px;
-            box-shadow: 5px 5px 10px rgba(0,0,0,0.5);
-            position: relative;
+            box-shadow: 5px 5px 10px rgba(0,0,0,0.5); position: relative;
         }
 
-        /* Botão secreto no pé direito */
         #secret-btn {
-            width: 100%; height: 100%;
-            opacity: 0; cursor: pointer; border: none;
+            width: 100%; height: 100%; opacity: 0; cursor: pointer; border: none;
         }
         
         /* O LIVRO */
         .book {
             margin-right: 1px;
-            background-size: cover;
-            background-position: center;
-            background-repeat: no-repeat;
+            background-size: cover; background-position: center; background-repeat: no-repeat;
             border-radius: 1px;
             box-shadow: 2px 0 5px rgba(0,0,0,0.9);
             transition: transform 0.2s;
-            cursor: pointer; /* Mãozinha indicando clique */
-            position: relative;
+            cursor: pointer; position: relative;
+            /* Flex-shrink impede que o livro seja esmagado se a estante encher demais */
+            flex-shrink: 0; 
         }
 
         .book:hover {
@@ -114,39 +90,25 @@
 
         .book:hover::after {
             content: attr(data-title);
-            position: absolute;
-            bottom: 105%; left: 50%;
+            position: absolute; bottom: 105%; left: 50%;
             transform: translateX(-50%);
-            background: #000;
-            color: #fff;
-            padding: 4px 8px;
-            border-radius: 4px;
-            font-size: 11px;
-            white-space: nowrap;
-            z-index: 20;
-            border: 1px solid #333;
+            background: #000; color: #fff;
+            padding: 4px 8px; border-radius: 4px;
+            font-size: 11px; white-space: nowrap;
+            z-index: 20; border: 1px solid #333;
         }
 
         /* --- PAINEL DE CADASTRO --- */
         #admin-panel {
-            display: none;
-            background: #151515;
-            padding: 15px;
-            border-bottom: 2px solid #333;
-            position: fixed;
-            top: 0; left: 0; right: 0;
-            z-index: 100;
+            display: none; background: #151515; padding: 15px;
+            border-bottom: 2px solid #333; position: fixed;
+            top: 0; left: 0; right: 0; z-index: 100;
             box-shadow: 0 10px 40px rgba(0,0,0,1);
         }
 
-        .input-group {
-            display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 10px;
-        }
-
-        input {
-            padding: 8px; background: #222; border: 1px solid #444; color: #eee; border-radius: 4px;
-        }
-        .input-mini { width: 70px; }
+        .input-group { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 10px; }
+        input { padding: 8px; background: #222; border: 1px solid #444; color: #eee; border-radius: 4px; }
+        .input-mini { width: 80px; } /* Aumentei um pouco para caber o texto */
 
         button.action-btn {
             padding: 8px 16px; cursor: pointer; border: none; border-radius: 4px; font-weight: 600; text-transform: uppercase; font-size: 11px; color: white;
@@ -154,13 +116,12 @@
         .btn-add { background-color: #388E3C; }
         .btn-close { background-color: #D32F2F; }
         .btn-undo { background-color: #555; }
-
     </style>
 </head>
 <body>
 
     <div id="admin-panel">
-        <h3 style="margin: 0 0 10px 0; color: #ccc; font-size: 16px;">Gerenciar Estante</h3>
+        <h3 style="margin: 0 0 10px 0; color: #ccc; font-size: 16px;">Gerenciar Estante (Modo CM)</h3>
         
         <div class="input-group">
             <input type="text" id="seriesName" placeholder="Nome da Série" style="flex: 2;">
@@ -173,8 +134,8 @@
         </div>
 
         <div class="input-group">
-            <input type="number" id="bookHeight" class="input-mini" placeholder="Alt %" value="85" title="Altura (80 a 100%)">
-            <input type="number" id="bookWidth" class="input-mini" placeholder="Larg px" value="25" title="Espessura (px)">
+            <input type="number" id="bookHeightCm" class="input-mini" placeholder="Alt (cm)" value="19" step="0.1" title="Altura em CM (ex: 19)">
+            <input type="number" id="bookWidthCm" class="input-mini" placeholder="Esp (cm)" value="1.5" step="0.1" title="Espessura em CM (ex: 1.5)">
             
             <button class="action-btn btn-add" onclick="addBook()">Adicionar</button>
             <button class="action-btn btn-close" onclick="togglePanel()">Fechar</button>
@@ -203,8 +164,17 @@
     </div>
 
     <script>
-        // Mudei a chave para v4 para garantir que pegue a nova estrutura com links
-        let myBooks = JSON.parse(localStorage.getItem('myMangaShelf_v4')) || [];
+        // Mudei para v5 para limpar os dados antigos que usavam porcentagem
+        // Se quiser seus dados antigos de volta, mude para v4, mas a escala ficará errada.
+        let myBooks = JSON.parse(localStorage.getItem('myMangaShelf_v5')) || [];
+
+        // --- FATOR DE ESCALA ---
+        // A prateleira tem 130px de altura.
+        // Se definirmos que 1 cm = 5 pixels:
+        // Um mangá padrão (19cm) terá 95px (sobra um espacinho em cima, fica ótimo).
+        // Um mangá alto (21cm) terá 105px.
+        // Uma HQ grande (26cm) terá 130px (ocupa a prateleira toda).
+        const PIXELS_PER_CM = 5; 
 
         function togglePanel() {
             const panel = document.getElementById('admin-panel');
@@ -212,7 +182,7 @@
         }
 
         function saveAndRender() {
-            localStorage.setItem('myMangaShelf_v4', JSON.stringify(myBooks));
+            localStorage.setItem('myMangaShelf_v5', JSON.stringify(myBooks));
             renderShelf();
         }
 
@@ -220,10 +190,11 @@
             const series = document.getElementById('seriesName').value.trim();
             const vol = parseInt(document.getElementById('volNumber').value);
             const url = document.getElementById('imgUrl').value.trim();
-            const link = document.getElementById('pageLink').value.trim(); // Captura o Link
+            const link = document.getElementById('pageLink').value.trim();
             
-            let h = parseInt(document.getElementById('bookHeight').value) || 85;
-            let w = parseInt(document.getElementById('bookWidth').value) || 25;
+            // Pegamos os valores em CM (aceita decimais, ex: 1.5)
+            let h_cm = parseFloat(document.getElementById('bookHeightCm').value) || 19;
+            let w_cm = parseFloat(document.getElementById('bookWidthCm').value) || 1.5;
 
             if (!series || !url) {
                 alert("Preciso do Nome e da Imagem da Lombada!");
@@ -234,27 +205,29 @@
                 series: series,
                 vol: isNaN(vol) ? 0 : vol,
                 url: url,
-                link: link, // Salva o link no objeto do livro
-                h: h,
-                w: w,
+                link: link,
+                h_cm: h_cm, // Salvamos em CM
+                w_cm: w_cm, // Salvamos em CM
                 id: Date.now()
             };
 
             myBooks.push(newBook);
             
-            // Limpa campos variáveis, mantém série e dimensões
+            // Limpa campos
             document.getElementById('volNumber').value = '';
             document.getElementById('imgUrl').value = '';
-            document.getElementById('pageLink').value = ''; // Limpa o link
+            document.getElementById('pageLink').value = '';
             
             saveAndRender();
         }
 
         function renderShelf() {
+            // Limpa as prateleiras
             for (let i = 1; i <= 6; i++) {
                 document.getElementById(`shelf-${i}`).innerHTML = '';
             }
 
+            // Ordenação
             myBooks.sort((a, b) => {
                 if (a.series.toLowerCase() < b.series.toLowerCase()) return -1;
                 if (a.series.toLowerCase() > b.series.toLowerCase()) return 1;
@@ -263,30 +236,33 @@
 
             let shelfIndex = 1;
             let currentWidthUsed = 0;
-            const shelfMaxWidth = 400; 
+            const shelfMaxWidth = 400; // Largura aproximada útil da prateleira
 
             myBooks.forEach(book => {
+                // Converte CM para PIXELS na hora de desenhar
+                const heightPx = book.h_cm * PIXELS_PER_CM;
+                const widthPx = book.w_cm * PIXELS_PER_CM;
+
                 const bookDiv = document.createElement('div');
                 bookDiv.className = 'book';
                 bookDiv.style.backgroundImage = `url('${book.url}')`;
-                bookDiv.style.height = `${book.h}%`;
-                bookDiv.style.width = `${book.w}px`;
+                
+                // Aplica as medidas convertidas
+                bookDiv.style.height = `${heightPx}px`;
+                bookDiv.style.width = `${widthPx}px`;
                 
                 const displayVol = book.vol > 0 ? ` #${book.vol}` : '';
                 bookDiv.setAttribute('data-title', `${book.series}${displayVol}`);
 
-                // --- LÓGICA DO CLIQUE (LINK) ---
                 if (book.link) {
-                    bookDiv.onclick = function() {
-                        window.open(book.link, '_blank'); // Abre em nova aba
-                    };
+                    bookDiv.onclick = function() { window.open(book.link, '_blank'); };
                     bookDiv.style.cursor = "pointer";
                 } else {
-                    // Se não tiver link, o cursor fica normal (ou default)
                     bookDiv.style.cursor = "default";
                 }
 
-                if ((currentWidthUsed + book.w) > shelfMaxWidth) {
+                // Lógica de quebra de linha (vai para próxima prateleira se encher)
+                if ((currentWidthUsed + widthPx) > shelfMaxWidth) {
                     shelfIndex++;
                     currentWidthUsed = 0;
                 }
@@ -294,7 +270,7 @@
                 const currentShelf = document.getElementById(`shelf-${shelfIndex}`);
                 if (currentShelf) {
                     currentShelf.appendChild(bookDiv);
-                    currentWidthUsed += book.w;
+                    currentWidthUsed += widthPx;
                 }
             });
         }
