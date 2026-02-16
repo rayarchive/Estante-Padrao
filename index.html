@@ -4,9 +4,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="color-scheme" content="light dark">
-    <title>Estante Widget - Página B (Fix)</title>
+    <title>Estante Widget - Página B (Fix Final)</title>
     <style>
-        /* Manter seus estilos originais */
         :root {
             --shelf-bg: #0d0d0d; --shelf-border: #1a1a1a; --shelf-divider: #252525;
             --shelf-gradient-start: #050505; --shelf-gradient-end: #161616;
@@ -32,47 +31,52 @@
         .book, a.book-link { margin-right: 1px; background-size: 100% 100%; background-position: center; background-repeat: no-repeat; border-radius: 1px; box-shadow: 2px 0 5px rgba(0,0,0,0.9); transition: transform 0.2s; cursor: pointer; position: relative; flex-shrink: 0; display: block; }
         .book:hover, a.book-link:hover { transform: scale(1.05) translateY(-5px); z-index: 10; }
         
-        /* Estilos do Painel */
         #admin-panel { display: none; background: var(--panel-bg); padding: 15px; border-bottom: 2px solid var(--panel-border); position: fixed; top: 0; left: 0; right: 0; z-index: 100; max-height: 90vh; overflow-y: auto; box-shadow: 0 10px 40px rgba(0,0,0,0.5); }
         .input-group { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 10px; }
-        input, textarea { padding: 8px; background: var(--input-bg); border: 1px solid var(--input-border); color: var(--input-text); border-radius: 4px; width: 100%; box-sizing: border-box; }
-        .btn-add { background: #388E3C; color: white; border: none; padding: 8px; border-radius: 4px; cursor: pointer; }
-        .list-item { display: flex; justify-content: space-between; padding: 5px; background: var(--list-item-bg); margin-bottom: 5px; border-radius: 4px; font-size: 12px; border: 1px solid var(--panel-border); }
-        .btn-trash { background: #d32f2f; color: white; border: none; border-radius: 3px; cursor: pointer; padding: 2px 8px; }
-        #status-msg { padding: 10px; margin-bottom: 10px; border-radius: 4px; display: none; font-size: 12px; text-align: center; }
+        input, textarea { padding: 10px; background: var(--input-bg); border: 1px solid var(--input-border); color: var(--input-text); border-radius: 4px; width: 100%; box-sizing: border-box; font-size: 14px; }
+        .btn-action { padding: 10px; border: none; border-radius: 4px; cursor: pointer; font-weight: bold; color: white; }
+        .btn-add { background: #388E3C; flex: 1; }
+        .btn-close { background: #666; }
+        .list-item { display: flex; justify-content: space-between; padding: 8px; background: var(--list-item-bg); margin-bottom: 5px; border-radius: 4px; font-size: 12px; border: 1px solid var(--panel-border); }
+        .btn-trash { background: #d32f2f; color: white; border: none; border-radius: 3px; cursor: pointer; padding: 4px 8px; }
+        #status-msg { padding: 10px; margin-bottom: 10px; border-radius: 4px; display: none; font-size: 12px; text-align: center; font-weight: bold; }
+        
+        textarea { height: 80px; font-family: monospace; font-size: 12px; margin-top: 5px; }
     </style>
 </head>
 <body>
 
     <div id="admin-panel">
-        <h3>Gerenciar Estante B</h3>
+        <h3 style="margin-top:0">Configurações da Estante</h3>
         <div id="status-msg"></div>
 
         <div class="input-group">
-            <input type="text" id="seriesName" placeholder="Nome da Série" style="flex: 2;">
-            <input type="number" id="volNumber" placeholder="Vol." style="width: 60px;">
+            <input type="text" id="seriesName" placeholder="Nome da Série">
+            <input type="number" id="volNumber" placeholder="Vol." style="width: 70px;">
         </div>
         <div class="input-group">
-            <input type="text" id="imgUrl" placeholder="URL da Imagem">
+            <input type="text" id="imgUrl" placeholder="URL da Imagem (GitHub)">
             <input type="text" id="pageLink" placeholder="Link da Página (Opcional)">
         </div>
         <div class="input-group">
-            <input type="number" id="bookHeightCm" placeholder="Alt (cm)" value="19" step="0.1" style="width: 80px;">
-            <input type="number" id="bookWidthCm" placeholder="Esp (cm)" value="1.5" step="0.1" style="width: 80px;">
-            <button class="btn-add" onclick="addBook()">Adicionar</button>
-            <button class="btn-add" style="background:#666" onclick="togglePanel()">Fechar</button>
+            <input type="number" id="bookHeightCm" placeholder="Alt (cm)" value="19" step="0.1" style="width: 45%;">
+            <input type="number" id="bookWidthCm" placeholder="Esp (cm)" value="1.5" step="0.1" style="width: 45%;">
+        </div>
+        <div class="input-group">
+            <button class="btn-action btn-add" onclick="addBook()">Adicionar Livro</button>
+            <button class="btn-action btn-close" onclick="togglePanel()">Fechar</button>
         </div>
 
         <div id="book-list-container">
-            <h4>LIVROS CADASTRADOS:</h4>
+            <h4>LIVROS NA ESTANTE:</h4>
             <div id="active-book-list"></div>
         </div>
 
-        <div style="margin-top:20px; border-top: 1px solid #444; padding-top:10px;">
-            <label style="font-size: 11px;">CÓDIGO DE BACKUP (BASE64):</label>
-            <textarea id="backupText" readonly onclick="this.select()" placeholder="Clique em Gerar..."></textarea>
-            <button class="btn-add" style="background:#2196F3; width:100%; margin: 5px 0;" onclick="generateBackupCode()">Gerar e Copiar Código</button>
-            <button class="btn-add" style="background:#FF9800; width:100%;" onclick="restoreBackupCode()">Restaurar Código Colado</button>
+        <div style="margin-top:20px; border-top: 2px dashed #444; padding-top:15px;">
+            <label style="font-size: 12px; font-weight: bold;">BACKUP / TRANSFERÊNCIA:</label>
+            <textarea id="backupText" placeholder="Cole o código aqui para restaurar ou clique em gerar para copiar..."></textarea>
+            <button class="btn-action" style="background:#2196F3; width:100%; margin: 8px 0;" onclick="generateBackupCode()">1. Gerar e Copiar Código</button>
+            <button class="btn-action" style="background:#FF9800; width:100%;" onclick="restoreBackupCode()">2. Restaurar Código Colado</button>
         </div>
     </div>
 
@@ -101,7 +105,7 @@
             el.style.display = 'block';
             el.style.background = isError ? '#b71c1c' : '#1b5e20';
             el.style.color = 'white';
-            setTimeout(() => { el.style.display = 'none'; }, 3000);
+            setTimeout(() => { el.style.display = 'none'; }, 4000);
         }
 
         function togglePanel() {
@@ -129,12 +133,18 @@
 
             myBooks.push({ series, vol, url, link, h_cm, w_cm, id: Date.now() });
             saveAndRender();
-            showStatus("Livro Adicionado!");
+            showStatus("Livro Adicionado com sucesso!");
+            
+            document.getElementById('seriesName').value = '';
+            document.getElementById('volNumber').value = '';
+            document.getElementById('imgUrl').value = '';
         }
 
         function deleteBook(id) {
-            myBooks = myBooks.filter(b => b.id !== id);
-            saveAndRender();
+            if(confirm("Remover este livro?")) {
+                myBooks = myBooks.filter(b => b.id !== id);
+                saveAndRender();
+            }
         }
 
         function renderBookList() {
@@ -144,41 +154,53 @@
             myBooks.forEach(b => {
                 const item = document.createElement('div');
                 item.className = 'list-item';
-                item.innerHTML = `<span>${b.series} #${b.vol}</span><button class="btn-trash" onclick="deleteBook(${b.id})">X</button>`;
+                item.innerHTML = `<span>${b.series} #${b.vol}</span><button class="btn-trash" onclick="deleteBook(${b.id})">Remover</button>`;
                 list.appendChild(item);
             });
         }
 
-        // --- NOVO SISTEMA DE BACKUP ---
         function generateBackupCode() {
             try {
                 const dataStr = JSON.stringify(myBooks);
-                // Usamos btoa com encodeURIComponent para suportar caracteres especiais (acentos)
                 const base64 = btoa(encodeURIComponent(dataStr).replace(/%([0-9A-F]{2})/g, (match, p1) => String.fromCharCode('0x' + p1)));
                 const textArea = document.getElementById('backupText');
                 textArea.value = base64;
+                
+                // Tenta copiar para o clipboard automaticamente
                 textArea.select();
-                navigator.clipboard.writeText(base64);
-                showStatus("Código gerado e copiado!");
+                textArea.setSelectionRange(0, 99999); 
+                navigator.clipboard.writeText(base64).then(() => {
+                    showStatus("Código copiado para a área de transferência!");
+                }).catch(() => {
+                    showStatus("Código gerado! Copie o texto manualmente.", false);
+                });
             } catch (e) {
                 showStatus("Erro ao gerar backup", true);
             }
         }
 
         function restoreBackupCode() {
-            const code = document.getElementById('backupText').value.trim();
-            if (!code) return showStatus("Cole o código primeiro!", true);
+            const input = document.getElementById('backupText').value.trim();
+            if (!input) return showStatus("Cole o código no campo acima!", true);
+            
             try {
-                const decoded = decodeURIComponent(atob(code).split('').map(c => '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2)).join(''));
-                const imported = JSON.parse(decoded);
-                if (Array.isArray(imported)) {
-                    myBooks = imported;
+                let decodedData;
+                // Verifica se é JSON puro ou Base64
+                if (input.startsWith('[')) {
+                    decodedData = JSON.parse(input);
+                } else {
+                    const decodedStr = decodeURIComponent(atob(input).split('').map(c => '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2)).join(''));
+                    decodedData = JSON.parse(decodedStr);
+                }
+
+                if (Array.isArray(decodedData)) {
+                    myBooks = decodedData;
                     saveAndRender();
-                    showStatus("Restaurado com sucesso!");
+                    showStatus("Estante restaurada com sucesso!");
                     document.getElementById('backupText').value = "";
                 }
             } catch (e) {
-                showStatus("Código inválido ou corrompido!", true);
+                showStatus("Erro: Código inválido ou incompleto.", true);
             }
         }
 
@@ -198,7 +220,6 @@
                 if(book.link) { bookEl.href = book.link; bookEl.target = '_blank'; }
                 bookEl.className = book.link ? 'book-link' : 'book';
                 
-                // Sanitização da URL da imagem para evitar erros de espaço
                 const cleanUrl = book.url.replace(/\s/g, '%20');
                 bookEl.style.backgroundImage = `url('${cleanUrl}')`;
                 bookEl.style.height = `${hPx}px`;
