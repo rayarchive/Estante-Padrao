@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="color-scheme" content="light dark">
-    <title>Estante Widget - Página B (Fix Final)</title>
+    <title>Estante Widget - Página B (Responsiva)</title>
     <style>
         :root {
             --shelf-bg: #0d0d0d; --shelf-border: #1a1a1a; --shelf-divider: #252525;
@@ -21,27 +21,25 @@
                 --backup-text-bg: #fafafa; --backup-text-color: #1a8a1a;
             }
         }
-        html, body { margin: 0; padding: 0; background-color: transparent !important; font-family: 'Segoe UI', sans-serif; color: var(--text-color); }
-        .furniture-wrapper { width: 90%; max-width: 420px; margin: 20px auto; display: flex; flex-direction: column; align-items: center; }
-        .bookshelf-container { width: 100%; background-color: var(--shelf-bg); border: 15px solid var(--shelf-border); border-bottom: none; border-radius: 6px 6px 0 0; box-shadow: 10px 10px 30px rgba(0,0,0,0.6); display: flex; flex-direction: column; position: relative; }
-        .shelf-row { height: 130px; border-bottom: 12px solid var(--shelf-divider); display: flex; align-items: flex-end; padding: 0 8px; background: linear-gradient(to bottom, var(--shelf-gradient-start), var(--shelf-gradient-end)); position: relative; overflow: hidden; }
-        .shelf-row:last-of-type { border-bottom: none !important; background: transparent !important; }
-        .shelf-footer { width: calc(100% + 30px); height: 55px; background: var(--shelf-border); position: relative; margin-top: -1px; z-index: 5; }
+        html, body { margin: 0; padding: 0; background-color: transparent !important; font-family: 'Segoe UI', sans-serif; color: var(--text-color); overflow-x: hidden; }
+        .furniture-wrapper { width: 95%; margin: 20px auto; display: flex; flex-direction: column; align-items: center; }
+        .bookshelf-container { width: 100%; background-color: var(--shelf-bg); border: 15px solid var(--shelf-border); border-bottom: none; border-radius: 6px 6px 0 0; box-shadow: 10px 10px 30px rgba(0,0,0,0.6); display: flex; flex-direction: column; position: relative; box-sizing: border-box; }
+        .shelf-row { height: 130px; border-bottom: 12px solid var(--shelf-divider); display: flex; align-items: flex-end; padding: 0 10px; background: linear-gradient(to bottom, var(--shelf-gradient-start), var(--shelf-gradient-end)); position: relative; overflow: hidden; box-sizing: border-box; }
+        .shelf-row:last-of-type { border-bottom: none !important; }
+        .shelf-footer { width: calc(100% + 30px); height: 50px; background: var(--shelf-border); position: relative; margin-top: -1px; z-index: 5; }
         #secret-btn { position: absolute; right: 0; bottom: 0; width: 50px; height: 100%; opacity: 0; cursor: pointer; border: none; background: transparent; }
-        .book, a.book-link { margin-right: 1px; background-size: 100% 100%; background-position: center; background-repeat: no-repeat; border-radius: 1px; box-shadow: 2px 0 5px rgba(0,0,0,0.9); transition: transform 0.2s; cursor: pointer; position: relative; flex-shrink: 0; display: block; }
-        .book:hover, a.book-link:hover { transform: scale(1.05) translateY(-5px); z-index: 10; }
         
+        .book, a.book-link { margin-right: 1px; background-size: 100% 100%; background-position: center; background-repeat: no-repeat; border-radius: 1px; box-shadow: 2px 0 5px rgba(0,0,0,0.9); transition: transform 0.2s; cursor: pointer; position: relative; flex-shrink: 0; display: block; text-decoration: none; }
+        .book:hover, a.book-link:hover { transform: scale(1.05) translateY(-5px); z-index: 10; }
+        .book:hover::after, a.book-link:hover::after { content: attr(data-title); position: absolute; bottom: 105%; left: 50%; transform: translateX(-50%); background: var(--tooltip-bg); color: #fff; padding: 4px 8px; border-radius: 4px; font-size: 11px; white-space: nowrap; z-index: 20; border: 1px solid var(--panel-border); }
+
         #admin-panel { display: none; background: var(--panel-bg); padding: 15px; border-bottom: 2px solid var(--panel-border); position: fixed; top: 0; left: 0; right: 0; z-index: 100; max-height: 90vh; overflow-y: auto; box-shadow: 0 10px 40px rgba(0,0,0,0.5); }
         .input-group { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 10px; }
-        input, textarea { padding: 10px; background: var(--input-bg); border: 1px solid var(--input-border); color: var(--input-text); border-radius: 4px; width: 100%; box-sizing: border-box; font-size: 14px; }
+        input, textarea { padding: 10px; background: var(--input-bg); border: 1px solid var(--input-border); color: var(--input-text); border-radius: 4px; width: 100%; box-sizing: border-box; }
         .btn-action { padding: 10px; border: none; border-radius: 4px; cursor: pointer; font-weight: bold; color: white; }
         .btn-add { background: #388E3C; flex: 1; }
-        .btn-close { background: #666; }
         .list-item { display: flex; justify-content: space-between; padding: 8px; background: var(--list-item-bg); margin-bottom: 5px; border-radius: 4px; font-size: 12px; border: 1px solid var(--panel-border); }
-        .btn-trash { background: #d32f2f; color: white; border: none; border-radius: 3px; cursor: pointer; padding: 4px 8px; }
-        #status-msg { padding: 10px; margin-bottom: 10px; border-radius: 4px; display: none; font-size: 12px; text-align: center; font-weight: bold; }
-        
-        textarea { height: 80px; font-family: monospace; font-size: 12px; margin-top: 5px; }
+        #status-msg { padding: 10px; margin-bottom: 10px; border-radius: 4px; display: none; font-size: 12px; text-align: center; }
     </style>
 </head>
 <body>
@@ -49,34 +47,27 @@
     <div id="admin-panel">
         <h3 style="margin-top:0">Configurações da Estante</h3>
         <div id="status-msg"></div>
-
         <div class="input-group">
             <input type="text" id="seriesName" placeholder="Nome da Série">
             <input type="number" id="volNumber" placeholder="Vol." style="width: 70px;">
         </div>
         <div class="input-group">
-            <input type="text" id="imgUrl" placeholder="URL da Imagem (GitHub)">
+            <input type="text" id="imgUrl" placeholder="URL da Imagem">
             <input type="text" id="pageLink" placeholder="Link da Página (Opcional)">
         </div>
         <div class="input-group">
-            <input type="number" id="bookHeightCm" placeholder="Alt (cm)" value="19" step="0.1" style="width: 45%;">
-            <input type="number" id="bookWidthCm" placeholder="Esp (cm)" value="1.5" step="0.1" style="width: 45%;">
+            <input type="number" id="bookHeightCm" value="19" step="0.1" style="width: 45%;" title="Altura">
+            <input type="number" id="bookWidthCm" value="1.5" step="0.1" style="width: 45%;" title="Espessura">
         </div>
         <div class="input-group">
-            <button class="btn-action btn-add" onclick="addBook()">Adicionar Livro</button>
-            <button class="btn-action btn-close" onclick="togglePanel()">Fechar</button>
+            <button class="btn-action btn-add" onclick="addBook()">Adicionar</button>
+            <button class="btn-action" style="background:#666" onclick="togglePanel()">Fechar</button>
         </div>
-
-        <div id="book-list-container">
-            <h4>LIVROS NA ESTANTE:</h4>
-            <div id="active-book-list"></div>
-        </div>
-
+        <div id="active-book-list"></div>
         <div style="margin-top:20px; border-top: 2px dashed #444; padding-top:15px;">
-            <label style="font-size: 12px; font-weight: bold;">BACKUP / TRANSFERÊNCIA:</label>
-            <textarea id="backupText" placeholder="Cole o código aqui para restaurar ou clique em gerar para copiar..."></textarea>
-            <button class="btn-action" style="background:#2196F3; width:100%; margin: 8px 0;" onclick="generateBackupCode()">1. Gerar e Copiar Código</button>
-            <button class="btn-action" style="background:#FF9800; width:100%;" onclick="restoreBackupCode()">2. Restaurar Código Colado</button>
+            <textarea id="backupText" placeholder="Cole o código aqui..."></textarea>
+            <button class="btn-action" style="background:#2196F3; width:100%; margin: 8px 0;" onclick="generateBackupCode()">Gerar e Copiar Código</button>
+            <button class="btn-action" style="background:#FF9800; width:100%;" onclick="restoreBackupCode()">Restaurar Código</button>
         </div>
     </div>
 
@@ -101,11 +92,10 @@
 
         function showStatus(text, isError = false) {
             const el = document.getElementById('status-msg');
-            el.innerText = text;
-            el.style.display = 'block';
+            el.innerText = text; el.style.display = 'block';
             el.style.background = isError ? '#b71c1c' : '#1b5e20';
             el.style.color = 'white';
-            setTimeout(() => { el.style.display = 'none'; }, 4000);
+            setTimeout(() => { el.style.display = 'none'; }, 3000);
         }
 
         function togglePanel() {
@@ -127,24 +117,11 @@
             let link = document.getElementById('pageLink').value.trim();
             const h_cm = parseFloat(document.getElementById('bookHeightCm').value) || 19;
             const w_cm = parseFloat(document.getElementById('bookWidthCm').value) || 1.5;
-
-            if (!series || !url) { showStatus("Nome e URL são obrigatórios!", true); return; }
+            if (!series || !url) { showStatus("Campos obrigatórios vazios!", true); return; }
             if (link && !link.startsWith('http')) link = 'https://' + link;
-
             myBooks.push({ series, vol, url, link, h_cm, w_cm, id: Date.now() });
             saveAndRender();
-            showStatus("Livro Adicionado com sucesso!");
-            
-            document.getElementById('seriesName').value = '';
-            document.getElementById('volNumber').value = '';
-            document.getElementById('imgUrl').value = '';
-        }
-
-        function deleteBook(id) {
-            if(confirm("Remover este livro?")) {
-                myBooks = myBooks.filter(b => b.id !== id);
-                saveAndRender();
-            }
+            document.getElementById('volNumber').value = vol + 1; // Facilita cadastrar sequências
         }
 
         function renderBookList() {
@@ -154,92 +131,75 @@
             myBooks.forEach(b => {
                 const item = document.createElement('div');
                 item.className = 'list-item';
-                item.innerHTML = `<span>${b.series} #${b.vol}</span><button class="btn-trash" onclick="deleteBook(${b.id})">Remover</button>`;
+                item.innerHTML = `<span>${b.series} #${b.vol}</span><button onclick="deleteBook(${b.id})" style="background:red; border:none; color:white; cursor:pointer;">X</button>`;
                 list.appendChild(item);
             });
         }
 
+        function deleteBook(id) {
+            myBooks = myBooks.filter(b => b.id !== id);
+            saveAndRender();
+        }
+
         function generateBackupCode() {
-            try {
-                const dataStr = JSON.stringify(myBooks);
-                const base64 = btoa(encodeURIComponent(dataStr).replace(/%([0-9A-F]{2})/g, (match, p1) => String.fromCharCode('0x' + p1)));
-                const textArea = document.getElementById('backupText');
-                textArea.value = base64;
-                
-                // Tenta copiar para o clipboard automaticamente
-                textArea.select();
-                textArea.setSelectionRange(0, 99999); 
-                navigator.clipboard.writeText(base64).then(() => {
-                    showStatus("Código copiado para a área de transferência!");
-                }).catch(() => {
-                    showStatus("Código gerado! Copie o texto manualmente.", false);
-                });
-            } catch (e) {
-                showStatus("Erro ao gerar backup", true);
-            }
+            const dataStr = JSON.stringify(myBooks);
+            const base64 = btoa(encodeURIComponent(dataStr).replace(/%([0-9A-F]{2})/g, (match, p1) => String.fromCharCode('0x' + p1)));
+            document.getElementById('backupText').value = base64;
+            navigator.clipboard.writeText(base64);
+            showStatus("Código copiado!");
         }
 
         function restoreBackupCode() {
             const input = document.getElementById('backupText').value.trim();
-            if (!input) return showStatus("Cole o código no campo acima!", true);
-            
             try {
-                let decodedData;
-                // Verifica se é JSON puro ou Base64
-                if (input.startsWith('[')) {
-                    decodedData = JSON.parse(input);
-                } else {
-                    const decodedStr = decodeURIComponent(atob(input).split('').map(c => '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2)).join(''));
-                    decodedData = JSON.parse(decodedStr);
-                }
-
-                if (Array.isArray(decodedData)) {
-                    myBooks = decodedData;
-                    saveAndRender();
-                    showStatus("Estante restaurada com sucesso!");
-                    document.getElementById('backupText').value = "";
-                }
-            } catch (e) {
-                showStatus("Erro: Código inválido ou incompleto.", true);
-            }
+                const decoded = decodeURIComponent(atob(input).split('').map(c => '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2)).join(''));
+                myBooks = JSON.parse(decoded);
+                saveAndRender();
+                showStatus("Restaurado!");
+            } catch (e) { showStatus("Código inválido!", true); }
         }
 
         function renderShelf() {
-            document.querySelectorAll('.shelf-row').forEach(s => s.innerHTML = '');
+            const rows = document.querySelectorAll('.shelf-row');
+            rows.forEach(r => r.innerHTML = '');
+            
+            // Pega a largura real da prateleira (importante para o Notion)
+            const rowWidth = rows[0].offsetWidth - 20; 
+
             myBooks.sort((a,b) => a.series.localeCompare(b.series) || a.vol - b.vol);
 
-            let shelfIndex = 1;
+            let currentRow = 0;
             let currentWidthUsed = 0;
-            const shelfMaxWidth = 380; 
 
             myBooks.forEach(book => {
-                const hPx = book.h_cm * PIXELS_PER_CM;
                 const wPx = book.w_cm * PIXELS_PER_CM;
-                
-                const bookEl = document.createElement(book.link ? 'a' : 'div');
-                if(book.link) { bookEl.href = book.link; bookEl.target = '_blank'; }
-                bookEl.className = book.link ? 'book-link' : 'book';
-                
-                const cleanUrl = book.url.replace(/\s/g, '%20');
-                bookEl.style.backgroundImage = `url('${cleanUrl}')`;
-                bookEl.style.height = `${hPx}px`;
-                bookEl.style.width = `${wPx}px`;
-                bookEl.setAttribute('data-title', `${book.series} #${book.vol}`);
+                const hPx = book.h_cm * PIXELS_PER_CM;
 
-                if ((currentWidthUsed + wPx) > shelfMaxWidth) {
-                    shelfIndex++;
+                // Se o livro não couber na prateleira atual, pula para a próxima
+                if (currentWidthUsed + wPx > rowWidth) {
+                    currentRow++;
                     currentWidthUsed = 0;
                 }
 
-                const shelf = document.getElementById(`shelf-${shelfIndex}`);
-                if (shelf) {
-                    shelf.appendChild(bookEl);
-                    currentWidthUsed += wPx;
+                if (rows[currentRow]) {
+                    const bookEl = document.createElement(book.link ? 'a' : 'div');
+                    if(book.link) { bookEl.href = book.link; bookEl.target = '_blank'; }
+                    bookEl.className = book.link ? 'book-link' : 'book';
+                    bookEl.style.backgroundImage = `url('${book.url.replace(/\s/g, '%20')}')`;
+                    bookEl.style.height = `${hPx}px`;
+                    bookEl.style.width = `${wPx}px`;
+                    bookEl.setAttribute('data-title', `${book.series} #${book.vol}`);
+                    
+                    rows[currentRow].appendChild(bookEl);
+                    currentWidthUsed += wPx + 1; // +1 do margin
                 }
             });
         }
 
-        renderShelf();
+        // Re-renderiza se mudar o tamanho da janela
+        window.addEventListener('resize', renderShelf);
+        // Garante o render inicial
+        setTimeout(renderShelf, 500);
     </script>
 </body>
 </html>
